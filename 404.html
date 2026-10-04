@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Banana News</title>
+<meta name="robots" content="noindex">
+<style>
+body{font-family:system-ui,sans-serif;background:#fffbe6;color:#222;display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0;text-align:center}
+main{padding:2rem;max-width:30rem}h1{margin:.2rem 0}
+a.btn{display:inline-block;margin-top:1rem;padding:.8rem 1.6rem;background:#f5c518;color:#222;font-weight:700;border-radius:.6rem;text-decoration:none}
+</style></head><body><main>
+<div style="font-size:3rem">🍌</div>
+<h1>Banana News</h1>
+<p id="msg">Taking you to that page…</p>
+<a class="btn" id="go" href="/">Open Banana News</a>
+</main>
+<script>
+/* Deep-link door: banananews.org is a static redirect page, so a shared link like banananews.org/story/123 lands here (GitHub Pages serves this file for any
+   unknown path). Send the visitor to the same path on the live site (current.json, same probe as index.html), keeping ?query and #hash. */
+(function(){
+  var FALLBACK="https://newsium-d47770.loca.lt", go=document.getElementById("go"), msg=document.getElementById("msg"), done=false;
+  var rest=location.pathname+location.search+location.hash;
+  if(location.pathname=="/"||/^\/(current\.json|404\.html)$/.test(location.pathname)) rest="/";
+  function dest(u){ if(done) return; done=true; go.href=u+rest; location.replace(u+rest); }
+  fetch("/current.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json();}).then(function(c){
+    var u=(c.url||"").replace(/\/+$/,""), fb=(c.fallback||FALLBACK).replace(/\/+$/,"");
+    if(!/^https:\/\/[a-z0-9.-]+$/i.test(u)){ return dest(fb); }
+    go.href=u+rest;
+    var img=new Image(), t=setTimeout(function(){ img.onload=img.onerror=null; msg.textContent="Using backup link…"; dest(fb); },6000);
+    img.onload=function(){ clearTimeout(t); dest(u); };
+    img.onerror=function(){ clearTimeout(t); msg.textContent="Using backup link…"; dest(fb); };
+    img.src=u+"/static/icons/icon.svg?probe="+Date.now();
+  }).catch(function(){ dest(FALLBACK); });
+})();
+</script></body></html>
