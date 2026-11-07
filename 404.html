@@ -18,7 +18,7 @@ a.btn{display:inline-block;margin-top:1rem;padding:.8rem 1.6rem;background:#f5c5
 /* Deep-link door: banananews.org is a static redirect page, so a shared link like banananews.org/story/123 lands here (GitHub Pages serves this file for any
    unknown path). Send the visitor to the same path on the live site (current.json, same probe as index.html), keeping ?query and #hash. */
 (function(){
-  var FALLBACK="https://newsium-d47770.loca.lt", go=document.getElementById("go"), msg=document.getElementById("msg"), done=false;
+  var FALLBACK="https://banananews.org", go=document.getElementById("go"), msg=document.getElementById("msg"), done=false;
   var rest=location.pathname+location.search+location.hash;
   if(location.pathname=="/"||/^\/(current\.json|404\.html)$/.test(location.pathname)) rest="/";
   function dest(u){ if(done) return; done=true; go.href=u+rest; location.replace(u+rest); }
